@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require("axios");
 
 const app = express();
 const PORT = 3000;
@@ -14,12 +15,13 @@ app.get("/", async (req, res) => {
         // Convert Reddit post URL to JSON format
         const jsonUrl = postUrl.endsWith(".json") ? postUrl : `${postUrl}.json`;
 
-        const response = await fetch(jsonUrl); 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+        const response = await axios.get(jsonUrl, {
+            headers: {
+                "User-Agent": "MyRedditAPI/1.0 (by YourUsername)"
+            }
+        });
 
-        const data = await response.json();
+        const data = response.data;
 
         // Extract comments
         const comments = data[1]?.data?.children
@@ -28,7 +30,7 @@ app.get("/", async (req, res) => {
 
         res.json({ comments });
     } catch (error) {
-        console.error("Error fetching Reddit comments:", error);
+        console.error("Error fetching Reddit comments:", error.message);
         res.status(500).json({ error: "Failed to fetch comments" });
     }
 });
