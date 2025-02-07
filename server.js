@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
-app.get("/reddit-comments", async (req, res) => {
+app.get("/", async (req, res) => {
     const postUrl = req.query.postUrl;
 
     if (!postUrl) {
@@ -14,7 +14,7 @@ app.get("/reddit-comments", async (req, res) => {
         // Convert Reddit post URL to JSON format
         const jsonUrl = postUrl.endsWith(".json") ? postUrl : `${postUrl}.json`;
 
-        const response = await fetch(jsonUrl); // Native fetch works in Node.js 18+
+        const response = await fetch(jsonUrl); 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
